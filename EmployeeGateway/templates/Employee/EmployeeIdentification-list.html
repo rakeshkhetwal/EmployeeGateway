@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+
+{% block body_block %}
+   
+
+<tbody>
+
+                                              {% for attr in Attributes %}
+
+
+                                                <tr class="odd gradeX">
+                                                    <td>
+                                                        <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                                            <input type="checkbox" class="checkboxes" value="1" />
+                                                            <span></span>
+                                                        </label>
+
+                                                    </td>
+
+                                                  <label> Unique Identification No </label>
+                                                  
+                                                  <td> {{attr.pk}}  </td>
+
+
+                                                  <label> Name </label>
+
+                                                   
+
+                                                  
+
+                                                  <label> Contact No</label>
+                                                  
+                                                  <td> {{attr.contact_no}}  </td>
+
+                                                  <br>
+                                                    
+                                                </tr>
+                                                      
+
+
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+
+
+
+                                        {% endblock %}

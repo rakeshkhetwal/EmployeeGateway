@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+
+<form action="{% url 'add-money-to-wallet' %}" method="post">
+
+	<input type="number" name="amount">
+	<input type="number" name="user">
+	<select name="transaction_type">
+      
+      <option value="ESI">ESI</option>
+      <option value="Pension">Pesnion</option>
+      <option value="PF">PF</option>
+  
+    </select> 
+
+    <input type="submit" name="submit">
+
+	
+
+</form>
+
+
+</body>
+</html>
