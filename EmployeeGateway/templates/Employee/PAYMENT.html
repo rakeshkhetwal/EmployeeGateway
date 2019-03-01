@@ -5,19 +5,19 @@
 </head>
 <body>
 
-<form action="{% url 'add-money-to-wallet' %}" method="post">
+<form  method="post" action="http://127.0.0.1:8000/add-money-to-wallet/" >
 
-	<input type="number" name="amount">
-	<input type="number" name="user">
-	<select name="transaction_type">
+	<label>AMOUNT</label><input type="number" name="amount">
+	<label>UNIQUE-ID</label><input type="number" name="unique_id">
+	<label>TransactionTYpe</label><select name="transaction_type">
       
       <option value="ESI">ESI</option>
-      <option value="Pension">Pesnion</option>
+      <option value="PENSION">Pesnion</option>
       <option value="PF">PF</option>
   
     </select> 
 
-    <input type="submit" name="submit">
+    <button type="submit">Submit </button>
 
 	
 

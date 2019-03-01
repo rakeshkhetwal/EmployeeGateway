@@ -257,55 +257,69 @@ class EmployeeIdentificationNoDetailView(DetailView):
 
 
 
-
-
-class AddMoneytoWallet(APIView):
-    # def get(self, request):
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
+import string
+# class AddMoneytoWallet(APIView):
+    # def get(self, request, format=None):
+    #     print(request.data)
     #     pass
+def __id_generator__(size=6, chars=string.ascii_uppercase + string.digits + string.ascii_lowercase):
+# return ''.join(random.choice(chars) for _ in range(size))
+    from django.utils import timezone
+    today_now = timezone.now()
+    order_id = today_now.strftime("%Y%m%d%H%M%f")
+    return order_id
 
-    def post(self, request):
-        print(request.POST)
-        request_data = request.POST
-        amount = request_data["amount"]
-        user_unique_id = request_data["user"]
-        transaction_type = request_data["transaction_type"]
-        time = timezone.now()
-        transaction_id = 123
-        if transaction_type == "ESI":
-            transaction_type_id = TransactionType.ESI
-        if transaction_type == "PENSION":
-            transaction_type_id = TransactionType.PENSION
-        if transaction_type == "PF":
-            transaction_type_id = TransactionType.PF
-        user = User.objects.filter(unique_id=int(user_unique_id))
-        if user.exists():
-            user = user.first()
-            wallet, created = Wallet.objects.get_or_create(user=user)
-            if wallet.exists():
-                try:
-                    WalletTransaction.objects.create(wallet=wallet.first(), amount=amount,
-                                              transaction_type=transaction_type_id, time=time,
-                                               transaction_id=transaction_id, transaction_status=TransactionStatus.SUCCESS)
-                    if transaction_type == "ESI":
-                        current_esi_bal = wallet.first().esi_bal
-                        wallet.first().esi_bal = current_esi_bal + amount
-                    if transaction_type == "PENSION":
-                        current_pension_bal = wallet.first().pension_bal
-                        wallet.first().pension_bal = current_pension_bal + amount
-                    if transaction_type == "PF":
-                        current_pf_bal = wallet.first().pf_bal
-                        wallet.first().pf_bal = current_pf_bal + amount
+@csrf_exempt
+def payment(request):
+    print(request.method)
+    print(request.POST)
+    request_data = request.POST
+    amount = request_data["amount"]
+    user_unique_id = request_data["unique_id"]
+    transaction_type = request_data["transaction_type"]
+    time = timezone.now()
+    transaction_id = __id_generator__()
+    if transaction_type == "ESI":
+        transaction_type_id = TransactionType.ESI
+    if transaction_type == "PENSION":
+        transaction_type_id = TransactionType.PENSION
+    if transaction_type == "PF":
+        transaction_type_id = TransactionType.PF
+    print(int(user_unique_id))
+    user = CustomUser.objects.filter(unique_id=int(user_unique_id))
+    if user.exists():
+        user = user.first()
+        wallet, created = Wallet.objects.get_or_create(user=user)
+        try:
+            amount = int(amount)
+            WalletTransaction.objects.create(wallet=wallet, amount=int(amount),
+                                      transaction_type=transaction_type_id, time=time,
+                                       transaction_id=transaction_id, transaction_status=TransactionStatus.SUCCESS)
+            if transaction_type == "ESI":
+                current_esi_bal = wallet.esi_bal
+                wallet.esi_bal = current_esi_bal + amount
+            if transaction_type == "PENSION":
+                current_pension_bal = wallet.pension_bal
+                wallet.pension_bal = current_pension_bal + amount
+            if transaction_type == "PF":
+                current_pf_bal = wallet.pf_bal
+                wallet.pf_bal = current_pf_bal + amount
 
-                    wallet.save()
-                except:
-                    WalletTransaction.objects.create(wallet=wallet.first(), amount=amount,
-                                              transaction_type=transaction_type_id, time=time,
-                                               transaction_id=transaction_id, transaction_status=TransactionStatus.PENDING)
+            wallet.save()
+            return HttpResponse("Success")
+        except:
 
-            else:
-                raise serializer.ValidationError({"detail" : "Wallet Doesn't eist for this user"})
+            WalletTransaction.objects.create(wallet=wallet, amount=amount,
+                                      transaction_type=transaction_type_id, time=time,
+                                       transaction_id=transaction_id, transaction_status=TransactionStatus.PENDING)
+            return HttpResponse("Fail")
 
-            
+    else:
+        return HttpResponse("User Doesn't exist")
+
+        
 
             
 

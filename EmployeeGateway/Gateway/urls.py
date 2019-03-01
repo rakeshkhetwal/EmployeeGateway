@@ -1,7 +1,7 @@
 from django.conf.urls import url
 
 from . import views
-
+from django.views.generic import TemplateView
 app_name='Gateway'
 
 urlpatterns = [
@@ -17,10 +17,11 @@ url(r'^create/', views.EmployeeIdentificationNoCreateView.as_view(), name="Emplo
 url(r'^home/', views.EmployeeIdentificationNoListView.as_view(), name="employeelist"),
 
 url(r'^home/details/(?P<pk>\d+)', views.EmployeeIdentificationNoDetailView.as_view(), name="y"),
+url(r'^g$', TemplateView.as_view(template_name="Employee/PAYMENT.html"), name='g'),
 
 
 
-url(r'^add-money-to-wallet/', views.AddMoneytoWallet.as_view(), name="add-money-to-wallet")
+url(r'^add-money-to-wallet/', views.payment, name="add-money-to-wallet")
 
 
 

@@ -39,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'crispy_forms',
     'Gateway',
 ]
 
@@ -83,7 +86,17 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
+# DATABASES = {
+#     'default': { 
+#         'ENGINE': 'django.db.backends.mysql', 
+#         #'NAME': 'django_db',   
+#         'NAME': os.path.join(BASE_DIR, 'database/django_db'),                                       
+#         'USER': 'root',
+#         'PASSWORD': 'myPassword',
+#         'HOST': 'localhost',
+#         'PORT': '3306', 
+#     }
+#     }
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
@@ -103,7 +116,20 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTH_USER_MODEL = 'Gateway.User'
+REST_FRAMEWORK = {
+    # 'DEFAULT_PERMISSION_CLASSES': (
+    #     'core.permissions.AllowOptionsAuthentication',
+    # ),
+    'DEFAULT_AUTHENTICATION_CLASSES': 'rest_framework.authentication.TokenAuthentication',
+    'DEFAULT_PERMISSION_CLASSES': 'rest_framework.permissions.IsAuthenticated',
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'DEFAULT_FILTER_BACKENDS': 'django_filters.rest_framework.DjangoFilterBackend',
+    'COERCE_DECIMAL_TO_STRING': False,
+    #'PAGE_SIZE': 100,
+    #'PAGINATE_BY': 10,
+}
+
+AUTH_USER_MODEL = 'Gateway.CustomUser'
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
