@@ -1,0 +1,46 @@
+
+
+
+
+{% extends 'base.html' %}
+
+
+
+{% block body_block %}
+
+
+
+<h1>  please create a user identification no for your employee</h1>
+
+<form  method="POST" action="http://127.0.0.1:8000/govt-create/">
+
+
+{% csrf_token %}
+name : 
+<input type="text" name="name">
+
+<br>
+dob :
+<input type="text" name="DOB">
+
+
+<br>
+
+gender :
+<input type="text" name="gender">
+<br>
+ 
+
+<br>
+
+residential addresss : 
+<input type="text" name="residential_address">
+
+<input type="submit" class='btn btn-primary' value="create" />
+
+
+
+</form>
+
+
+{% endblock %}

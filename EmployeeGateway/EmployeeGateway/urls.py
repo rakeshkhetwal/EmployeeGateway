@@ -24,8 +24,8 @@ urlpatterns = [
     url(r'', include("Gateway.urls", namespace="Gateway")),
     url(r'^admin/', admin.site.urls),
     
-    # url(r'^gateway/login/$', views.login, name='login'),
-    # url(r'^gateway/logout/$', views.logout, name='logout', kwargs={'next_page': '/'}),
+     url(r'^gateway/login/$', views.login, name='login'),
+     url(r'^gateway/logout/$', views.logout, name='logout', kwargs={'next_page': '/'}),
 
 ]
 

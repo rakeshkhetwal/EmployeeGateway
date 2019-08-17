@@ -123,7 +123,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': 'rest_framework.authentication.TokenAuthentication',
     'DEFAULT_PERMISSION_CLASSES': 'rest_framework.permissions.IsAuthenticated',
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'DEFAULT_FILTER_BACKENDS': 'django_filters.rest_framework.DjangoFilterBackend',
+    #'DEFAULT_FILTER_BACKENDS': 'django_filters.rest_framework.DjangoFilterBackend',
     'COERCE_DECIMAL_TO_STRING': False,
     #'PAGE_SIZE': 100,
     #'PAGINATE_BY': 10,
@@ -147,9 +147,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
-STATIC_URL = '/static/'
+
+
+
+MEDIA_URL="/"
+STATIC_URL="/static/"
+STATIC_ROOT="/static/"
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 
-# LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/list/'

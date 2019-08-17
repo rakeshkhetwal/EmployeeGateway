@@ -33,29 +33,76 @@ from django.contrib.auth.models import User
 #     REQUIRED_FIELDS = ['email']
 
 class CustomUser(AbstractUser):
+    
+
     unique_id = models.IntegerField(null=True, blank=True)
-
-
     def __str__(self):
         return self.email
 
 
 
+
+# class ChequeSystem(models.Model):
+#   bank_account = models.PositiveIntegerField(blank=False, null=False)
+#   IFSC = models.CharField(max_length=100, blank=True, null=True)
+#   bank = models.CharField(max_length=100, blank=True, null=True)
+#   def __str__(self):
+#     return self.bank
+
+
+class UniqueIdentityDetails(models.Model):
+  #user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+  name =  models.CharField(max_length=50, blank=True, null=True)
+  DOB =  models.PositiveIntegerField(blank=True, null=True)
+  unique_id = models.PositiveIntegerField(blank=True, null=True)
+  gender = models.CharField(max_length=50, blank=True, null=True)
+  residential_address = models.CharField(max_length=1000, blank=True, null=True)
+
+
+
+
+
 class EmployeeDetails(models.Model):
-	employee_name =  models.CharField(max_length=50, blank=False, null=False)
-	contact_no = models.PositiveIntegerField(blank=False, null=False)
+  #uniqueidentitydetails = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+  employee_name =  models.CharField(max_length=50, blank=True, null=True)
+  contact_no = models.PositiveIntegerField(blank=True, null=True)
+  bank_accounts = models.PositiveIntegerField(blank=True, null=True)
+  IFSC = models.CharField(max_length=100, blank=True, null=True)
+  bank = models.CharField(max_length=100, blank=True, null=True)
+  salary = models.PositiveIntegerField(blank=True, null=True)
   
-class Wallet(models.Model):
-	user = models.ForeignKey('CustomUser')
-	available_bal = models.FloatField(default=0, null=True, blank=True)
-	esi_bal = models.FloatField(default=0, null=True, blank=True)
-	pension_bal = models.FloatField(default=0, null=True, blank=True)
-	pf_bal = models.FloatField(default=0, null=True, blank=True)
+  esi_bal = models.FloatField(default=0, null=True, blank=True)
+  pension_bal = models.FloatField(default=0, null=True, blank=True)
+  pf_bal = models.FloatField(default=0, null=True, blank=True)
+  #available_bal = models.FloatField(default=0, null=True, blank=True)
+  def save(self, *args, **kwargs):
 
-	def save(self, *args, **kwargs):
-		self.available_bal = self.esi_bal + self.pension_bal + self.pf_bal
+    self.esi_bal = (self.salary*15)/100
+    self.pension_bal = (self.salary*10)/100
+    self.pf_bal = (self.salary*5)/100
 
-		super(Wallet,self).save(*args, **kwargs)
+    super(EmployeeDetails,self).save(*args, **kwargs) 
+
+
+
+  def __str__(self):
+    return self.employee_name
+
+  
+# class Wallet(models.Model):
+# 	user = models.ForeignKey('CustomUser')
+# 	salary = models.FloatField(default=0, null=True, blank=True)
+# 	esi_bal = models.FloatField(default=0, null=True, blank=True)
+# 	pension_bal = models.FloatField(default=0, null=True, blank=True)
+# 	pf_bal = models.FloatField(default=0, null=True, blank=True)
+#   available_bal = models.FloatField(default=0, null=True, blank=True)
+# 	def save(self, *args, **kwargs):
+
+#     self.esi_bal = salary*
+# 		self.available_bal = self.esi_bal + self.pension_bal + self.pf_bal
+#     self.esi_bal = 
+
+# 		super(Wallet,self).save(*args, **kwargs)
 
 class TransactionStatus(object):
    SUCCESS = 1
@@ -68,23 +115,23 @@ class TransactionType(object):
    PF = 3
 
 class WalletTransaction(models.Model):
-	TRANSACTIONTYPE_CHOICES = (
+  TRANSACTIONTYPE_CHOICES = (
         (TransactionType.ESI, 'ESI'),
         (TransactionType.PENSION, 'PENSION'),
         (TransactionType.PF, 'PF')
         )
-	TRANSACTIONSTATUS_CHOICES = (
+  TRANSACTIONSTATUS_CHOICES = (
         (TransactionStatus.SUCCESS, 'SUCCESS'),
         (TransactionStatus.PENDING, 'PENDING'),
         (TransactionStatus.CANCELLED, 'CANCELLED')
         )
-
-	wallet = models.ForeignKey('Wallet')
-	transaction_id = models.CharField(max_length=250)
-	time = models.DateTimeField()
-	transaction_type = models.PositiveSmallIntegerField(choices=TRANSACTIONTYPE_CHOICES, default=TransactionType.ESI)
-	transaction_status = models.PositiveSmallIntegerField(choices=TRANSACTIONSTATUS_CHOICES, default=TransactionStatus.PENDING)
-	amount = models.FloatField(default=0)
+  wallet = models.ForeignKey('EmployeeDetails')
+  transaction_id = models.CharField(max_length=250)
+  transaction_type = models.PositiveSmallIntegerField(choices=TRANSACTIONTYPE_CHOICES, default=TransactionType.ESI)
+  transaction_status = models.PositiveSmallIntegerField(choices=TRANSACTIONSTATUS_CHOICES, default=TransactionStatus.PENDING)
+  amount = models.FloatField(default=0)
+  time_of_payment = models.DateTimeField(auto_now_add=True)
+  #time_of_next_payment = models.DateTimeField(auto_now=True)
 	
 
 
